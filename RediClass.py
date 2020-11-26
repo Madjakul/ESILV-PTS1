@@ -18,7 +18,7 @@ class Redi():
         # color code : R for red, W for white, O for orange, Y for yellow, G for green, B for blue
         if matrice == 0:
             matrice = []
-            for i in ('R', 'W', 'O', 'Y', 'G', 'B'):
+            for i in ('W', 'O', 'Y', 'R', 'G', 'B'):
                 matrice.append([[i, i, i], [i, 'X', i], [i, i, i]])
         self.cube = matrice
 
@@ -36,7 +36,6 @@ class Redi():
         :param side: 0,1,2 or 3. it define on which face of the redik the corner we want to rotate is located on
         :param y: up or down, it define the location of the corner we want to move
         :param z: 1 or -1, it define in wich way we rotate the corner. 1 is clockwise and -1 is reverse
-
         """
         if (y == 'up'):
             nextside = (side + 1) % 4
