@@ -27,7 +27,7 @@ la case du centre vide est marquée par "X"
 Initialisation :
 obj=GUI(mat)
 
-Mise à jour :
+Mise a jour :
 obj.afficher(mat)
 
 Quitter :
