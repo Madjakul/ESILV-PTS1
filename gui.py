@@ -40,6 +40,7 @@ obj.quit()
 import tkinter as tk
 import time
 import random
+from RediClass import RotateArray
 
 class GUI():
     def __init__(self,cube):
@@ -70,6 +71,15 @@ class GUI():
 
         
     def afficher(self,cube):
+        #rotation pour que les faces soient dans le bon sens :
+        cube[0]=RotateArray(cube[0],3)
+        cube[1]=RotateArray(cube[1],3)
+        cube[2]=RotateArray(cube[2],1)
+        cube[3]=RotateArray(cube[3],3)
+        cube[4]=RotateArray(cube[4],3)
+        cube[5]=RotateArray(cube[5],3)
+        #cube=[RotateArray(face,3) for face in cube]
+        
         #mise en 2d du cube
         margeX=15
         margeY=20
