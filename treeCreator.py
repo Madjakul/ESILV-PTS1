@@ -173,11 +173,11 @@ def loadDic():
 
 
 if __name__=="__main__":
-    #timeFunc(5)
-    loadDic()
+    timeFunc(10)
+    #loadDic()
     #print(loadDic())
-    testFindPathNRandom(5)
-    #saveDic()
+    #testFindPathNRandom(5)
+    saveDic()
     
     
     
