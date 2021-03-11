@@ -16,7 +16,7 @@ import copy
 import json
 import random
 
-Etat=namedtuple("Etat",["prof","posPrec"])
+#Etat=namedtuple("Etat",["prof","posPrec"])
 solvedCube=[[[i, i, i], [i, 'X', i], [i, i, i]] for i in ('W', 'O', 'Y', 'R', 'G', 'B')]
   
 def recuCreate(redi,profondeur,profMax):
@@ -32,10 +32,10 @@ def recuCreate(redi,profondeur,profMax):
                     insert=False
                     if not dicPos.get(str(newRedi.cube)):
                         insert =True
-                    elif dicPos[str(newRedi.cube)].prof>profondeur: #smaller prof=closer from start
+                    elif dicPos[str(newRedi.cube)]["prof"]>profondeur: #smaller prof=closer from start
                         insert=True
                     if insert :
-                        dicPos[str(newRedi.cube)]=Etat(profondeur,redi.cube)
+                        dicPos[str(newRedi.cube)]={"prof":profondeur,"posPrec":redi.cube}
                     recuCreate(newRedi, profondeur+1,profMax)
                     
                     
@@ -43,10 +43,10 @@ def findPath(inputRedi):
     redi=copy.deepcopy(inputRedi)
     #retourne toutes les étapes pour arriver à la position résolue à partire d'une position donnée
     etapes=[]
-    actuel = Etat(1000,redi.cube)
-    while actuel.prof>1:
+    actuel = {"prof":1000,"posPrec":redi.cube}
+    while actuel["prof"]>1:
         try :
-            new=copy.deepcopy(dicPos[str(actuel.posPrec)])
+            new=copy.deepcopy(dicPos[str(actuel["posPrec"])])
         except :
             print("Non présent dans le dic")
             break
@@ -55,13 +55,13 @@ def findPath(inputRedi):
             break
         etapes.append(actuel)
         actuel=new
-    etapes.append(Etat(0,solvedCube))
+    etapes.append({"prof":0,"posPrec":solvedCube})
     return etapes
 
 def createDic(profondeur) : 
     global dicPos
     dicPos={}
-    dicPos[str(solvedCube)]=Etat(0,"solved")
+    dicPos[str(solvedCube)]={"prof":0,"posPrec":solvedCube}
     initialRedi=RediClass.Redi()
     recuCreate(initialRedi, 1,profondeur)  
     return(dicPos)
@@ -69,10 +69,12 @@ def createDic(profondeur) :
 def timeFunc(prof):
     start_time = time.time()
     res=createDic(prof)
+    tempsEx=(time.time() - start_time)
+    taille=len(res)
     print("profondeur : ",prof)
-    print("%s seconds" % (time.time() - start_time))
-    print("taille : ",len(res))
-    return res
+    print(f"{tempsEx} seconds" )
+    print("taille : ",taille)
+    return (tempsEx,taille)
 
 def testFindPath():
     #creation dic
@@ -93,7 +95,7 @@ def testFindPath():
 
     #résolution
     chemin=findPath(redi)
-    pos=[etat.posPrec for etat in chemin]
+    pos=[etat["posPrec"] for etat in chemin]
     afficherListePositions(pos,2)
     print(chemin)
     return chemin
@@ -110,7 +112,7 @@ def testFindPathNRandom(n):
     
     #resolution
     chemin=findPath(redi)
-    pos=[etat.posPrec for etat in chemin]
+    pos=[etat["posPrec"] for etat in chemin]
     afficherListePositions(pos,2)
     return chemin
     
@@ -136,12 +138,14 @@ def testAffichage(prof,temps=1,key=True):
     if key :
         pos= list(map(literal_eval,list(res.keys()))) #converting string to array
     else :
-        pos=[etat.posPrec for etat in res.values()]
+        pos=[etat["posPrec"] for etat in res.values()]
     afficherListePositions(pos,temps)
     
 def dicStats():
-    profs=[val.prof for val in dicPos.values()]
-    print(Counter(profs))
+    profs=[val["prof"] for val in dicPos.values()]
+    counter=Counter(profs)
+    print(counter)
+    return counter
     
 def testKeyVal(prof):
     res=createDic(prof)
@@ -151,20 +155,31 @@ def testKeyVal(prof):
     keys= list(res.keys()) #converting string to array
     for k in keys:
         pass
-        if k==dicPos[k].posPrec:
+        if k==dicPos[k]["posPrec"]:
             counter+=1
     print("total errors : ",counter)
+    
+def saveDic():
+    with open('dicPos.txt', 'w') as file:
+        file.write(json.dumps(dicPos)) # use `json.loads` to do the reverse
+        
+def loadDic():
+    global dicPos
+    with open('dicPos.txt', 'r') as file:
+        dicPos=json.load(file)
+        
+    return dicPos
+    
+
 
 if __name__=="__main__":
-    timeFunc(5)
-    testFindPathNRandom(50)
-    #print(dicPos)
-    #dicStats()
-    #res=testFindPath()
-    #testAffichage(2,key=False)
-    #testKeyVal(3)
-    #with open('dicPos.txt', 'w') as file:
-   #    file.write(json.dumps(dicPos)) # use `json.loads` to do the reverse
+    #timeFunc(5)
+    loadDic()
+    #print(loadDic())
+    testFindPathNRandom(5)
+    #saveDic()
+    
+    
     
 
 
