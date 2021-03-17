@@ -66,6 +66,19 @@ def createDic(profondeur) :
     recuCreate(initialRedi, 1,profondeur)  
     return(dicPos)
 
+#ajouter des éléments dans un dicto existant
+def addToDic(profondeurMaxActuelle,newProf):
+    dicIter=copy.deepcopy(dicPos)
+    counter=0 #counter to know where we are in the execution
+    start_time = time.time() #to know time of exec
+    for key in dicIter:
+        if dicPos[key]["prof"]==profondeurMaxActuelle:
+            redi=RediClass.Redi(dicPos[key]["posPrec"])
+            recuCreate(redi, profondeurMaxActuelle, newProf)
+            counter+=1
+            #if counter%10==0:
+            print("nb : ",counter,"time : ",(time.time() - start_time),"s")
+
 def timeFunc(prof):
     start_time = time.time()
     res=createDic(prof)
@@ -167,17 +180,19 @@ def loadDic():
     global dicPos
     with open('dicPos.txt', 'r') as file:
         dicPos=json.load(file)
-        
+    dicStats()
     return dicPos
     
 
 
 if __name__=="__main__":
-    timeFunc(10)
-    #loadDic()
-    #print(loadDic())
-    #testFindPathNRandom(5)
+    #timeFunc(3)
+    loadDic()
+    addToDic(10, 12)
+    #testFindPathNRandom(4)
     saveDic()
+    dicStats()
+    #len(dicPos)
     
     
     
