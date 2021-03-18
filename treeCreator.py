@@ -8,7 +8,7 @@ Created on Thu Feb 18 21:13:51 2021
 # format {"position actuelle":(profondeur,positionPreced)}
 
 import RediClass
-from gui import afficherListePositions,afficherSimple
+from gui import afficherListePositions,afficherSimple,sauvegarderListePositions
 from ast import literal_eval
 from collections import namedtuple,Counter
 import time
@@ -55,8 +55,12 @@ def findPath(inputRedi):
             break
         etapes.append(actuel)
         actuel=new
-    etapes.append({"prof":0,"posPrec":solvedCube})
-    return etapes
+        
+    res=False
+    if len(etapes)>0:
+        etapes.append({"prof":0,"posPrec":solvedCube})
+        res=etapes
+    return res
 
 def createDic(profondeur) : 
     global dicPos
@@ -113,21 +117,43 @@ def testFindPath():
     print(chemin)
     return chemin
 
-def testFindPathNRandom(n):
-    #melange
-    redi=RediClass.Redi()
+def testFindPathNRandom(n,afficher=True,enregistrer=False,demo=False):
+    #initialisation
+    redi=RediClass.Redi(copy.deepcopy(solvedCube))
+    if demo:
+        print("cube initial")
+        afficherSimple(copy.deepcopy(redi.cube), touche=True)
+        
+    #melange    
+    listeMelange=[]
     for i in range (n):
         y=random.choice(["up","down"])
         side=random.choice([1,2])
         z=random.choice([1,-1])
         redi.rotate(side,y,z)
-    afficherSimple(copy.deepcopy(redi.cube), 3)
+        listeMelange.append(copy.deepcopy(redi.cube))
     
+    if demo:
+        print("Mélange du cube")
+        afficherListePositions(listeMelange,0.1)
+        
+    if afficher or demo:
+        print("Cube Mélangé")
+        afficherSimple(copy.deepcopy(redi.cube),touche=True)
+        
     #resolution
-    chemin=findPath(redi)
-    pos=[etat["posPrec"] for etat in chemin]
-    afficherListePositions(pos,2)
-    return chemin
+    chemin=findPath(redi) 
+    
+    #traitement solution
+    res=False
+    if chemin:
+        pos=[copy.deepcopy(etat["posPrec"]) for etat in chemin]
+        if afficher:
+            afficherListePositions(pos,2)
+        if enregistrer:
+            sauvegarderListePositions(pos)
+        res=chemin
+    return res
     
 def findPathSimpl(initialState):
     #retourne toutes les étapes pour arriver à la position résolue à partire d'une position donnée
@@ -182,16 +208,29 @@ def loadDic():
         dicPos=json.load(file)
     dicStats()
     return dicPos
+
+def demo():
+    print("chargement du dico")
+    loadDic()
+    print("dico chargé")
+    input("appuyer sur ENTRER pour continuer")
+    while True :
+        testFindPathNRandom(100,demo=True)
+        if input("taper exit pour quitter sinon ENTRER ")=="exit":
+            break
     
 
 
 if __name__=="__main__":
-    #timeFunc(3)
-    loadDic()
-    addToDic(10, 12)
-    #testFindPathNRandom(4)
-    saveDic()
-    dicStats()
+    demo()
+    #timeFunc(4)
+    #loadDic()
+    #addToDic(10, 12)
+    #for i in range(1000):
+    #    if testFindPathNRandom(1000,afficher=False):
+    #        print("OK")
+    #saveDic()
+    #dicStats()
     #len(dicPos)
     
     
