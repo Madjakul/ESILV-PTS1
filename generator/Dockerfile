@@ -2,8 +2,8 @@ FROM python:3.8-slim
 
 WORKDIR /
 
-COPY ./requirements.txt .
+COPY requirements.txt ./
 
-RUN pip3 install -r requirements.txt
+COPY . .
 
-CMD ["python3", "-m" "generator"]
+CMD ["python3", "-u", "./treeCreator.py"]
