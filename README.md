@@ -7,7 +7,7 @@ Phase 1             |  Phase 2
 ![](assets/images/phase1.gif)  |  ![](assets/images/phase2.gif)
 
 Ce repository contient tous les codes ayant servi à réalisé une exploration exhaustive du Redi Cube, une variante du Rubik's Cube.
----
+___
 
 
 ## Redi Cube
