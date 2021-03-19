@@ -185,9 +185,4 @@ def afficherSimple(mat,temps=3,touche=False):
     
 if __name__=="__main__":
     test_save()
-    
-
-
-
-
 
