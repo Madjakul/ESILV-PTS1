@@ -41,6 +41,9 @@ import tkinter as tk
 import time
 import random
 from RediClass import RotateArray
+import copy
+from PIL import ImageGrab,Image
+
 
 class GUI():
     def __init__(self,cube):
@@ -70,7 +73,8 @@ class GUI():
         
 
         
-    def afficher(self,cube):
+    def afficher(self,inputCube):
+        cube=copy.deepcopy(inputCube)
         #rotation pour que les faces soient dans le bon sens :
         cube[0]=RotateArray(cube[0],3)
         cube[1]=RotateArray(cube[1],3)
@@ -99,7 +103,16 @@ class GUI():
     
     def quit(self):
         self.root.destroy()
-            
+        
+    def save_as_bmp(self,fileName):
+        time.sleep(0.3)
+        x = self.canvas.winfo_rootx()*1.25 #compenser zoom écran
+        y = self.canvas.winfo_rooty()*1.25
+        w = self.canvas.winfo_width()*1.25
+        h = self.canvas.winfo_height()*1.25
+        image=ImageGrab.grab((x+2, y+2, x+w-2, y+h-2))
+        image.save(fileName+".bmp")
+
 #test :
         
 def test_aff_simple():
@@ -139,15 +152,37 @@ def test_Rand():
         time.sleep(1)
         af.afficher(randMatrice())
     af.quit()
+
+def test_save():
+    af=GUI(randMatrice())
+    af.save_as_bmp("testsave")
+    af.quit()
         
-
-
-
-if __name__=="__main__":
-    test_Rand()
+def afficherListePositions(positions,temps):
+    #initialisation
+    window=GUI(positions[0])
+    for pos in positions[1:]:
+        time.sleep(temps)
+        window.afficher(pos)
+    time.sleep(temps)
+    window.quit()
     
+def sauvegarderListePositions(positions):
+    window=GUI(positions[0])
+    window.save_as_bmp("cube"+str("0"))
+    for pos in range(1,len(positions)):
+        window.afficher(positions[pos])
+        window.save_as_bmp("cube"+str(pos))
+    window.quit()
 
-
-
-
+def afficherSimple(mat,temps=3,touche=False):
+    window=GUI(mat)
+    if touche:
+        input("Appuyer sur ENTRER pour continuer")
+    else :
+        time.sleep(temps)
+    window.quit()
+    
+if __name__=="__main__":
+    test_save()
 

@@ -13,16 +13,14 @@ def RotateArray(matrice, i):
 
 
 class Redi():
-    
-    solvedCube=[[[i, i, i], [i, 'X', i], [i, i, i]] for i in ('W', 'O', 'Y', 'R', 'G', 'B')]
-    
     def __init__(self, matrice=0):
         # if matrice is not define, we return a fully 'finished' cube.
         # color code : R for red, W for white, O for orange, Y for yellow, G for green, B for blue
         if matrice == 0:
-            self.cube=self.solvedCube
-        else:
-            self.cube = matrice
+            matrice = []
+            for i in ('W', 'O', 'Y', 'R', 'G', 'B'):
+                matrice.append([[i, i, i], [i, 'X', i], [i, i, i]])
+        self.cube = matrice
 
     def _print(self):
         for i in range(len(self.cube)):
