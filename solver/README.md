@@ -1,9 +1,8 @@
 # Solver
 
-![code size](https://img.shields.io/github/languages/code-size/Madjakul/ESILV-PTS/tree/main/generator)
+Résolution du cube avec GUI.
 ___
 
-Résolution du cube avec GUI.
 
 ## Prérequis
 
